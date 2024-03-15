@@ -1,0 +1,4 @@
+repository "cscs@littleamaterasu@cloud"
+  path "/"
+    br "/main"
+    co "/main"
