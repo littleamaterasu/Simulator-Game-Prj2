@@ -1,6 +1,7 @@
 # Simulator-Game-Prj2 (đang thực hiện)
 
 Chủ đề game: mô phỏng 1 văn phòng (không có thực) và cuộc sống công sở của nhân vật do người chơi điều khiển.
+
 Gameplay: Mô tả đơn giản
 - Nhân vật điều khiển sẽ có kinh nghiệm và cấp độ (mô phỏng chức vụ trong công ty), ngoài ra còn có tiền và các vật phẩm sử dụng khác.
 - Người chơi có thể thực hiện hai lựa chọn là làm nhiệm vụ hoặc thư giãn bằng các minigame:
