@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Demo_npc : Task1
 {
-    public float speed = .2f;
+    public float speed = 0f;
     public float changeDirectionInterval = .75f;
     public float wallStopDuration = 0.1f; // Thời gian dừng khi đâm vào tường
     public float npcShortStopDuration = 0.1f; // Thời gian dừng ngắn khi đâm vào NPC
