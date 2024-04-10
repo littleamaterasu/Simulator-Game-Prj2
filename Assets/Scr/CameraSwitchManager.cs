@@ -11,9 +11,9 @@ public class CameraSwitchManager : MonoBehaviour
 
     void Start(){
         // Enable the roaming camera and disable the following camera
-        roamCamera.enabled = true;
-        followCamera.enabled = false;
-        isFollowing = false;
+        roamCamera.enabled = false;
+        followCamera.enabled = true;
+        isFollowing = true;
     }
     void Update()
     {
