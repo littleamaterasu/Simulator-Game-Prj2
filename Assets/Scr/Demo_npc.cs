@@ -78,6 +78,18 @@ public class Demo_npc : Task1
         GetNewRandomDirection(); // Chọn hướng mới
     }
 
+    public void DisableNPC()
+    {
+        // Tắt hoạt động của script Demo_npc
+        enabled = false;
+    }
+
+    public void EnableNPC()
+    {
+        // Tắt hoạt động của script Demo_npc
+        enabled = true;
+    }
+
     // Lưu vị trí của NPC khi chuyển scene
     public void SavePosition()
     {

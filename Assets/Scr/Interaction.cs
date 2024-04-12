@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Interaction : MonoBehaviour
 {
@@ -10,15 +11,28 @@ public class Interaction : MonoBehaviour
     public Vector3 movingPos;
     bool startMoving = false;
     public Task1 target;
-    public string[] dialogue;
+    public string[] noTaskDialogue;
+    public string[] taskDialogue;
+    public List<string> Notice;
     public TMP_Text text;
     public bool isTalking = false;
+    public bool isSwitch = false;
     public int currentDialogue;
+    public int item = 0;
+    public int exp = 0;
     public bool isMeeting = true;
+    public Button no;
+    public Button yes;
+    public string minigame;
 
     private void Start()
     {
         currentDialogue = 0;
+        yes.onClick.AddListener(Yes);
+        no.onClick.AddListener(No);
+
+        yes.gameObject.SetActive(false);
+        no.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -36,7 +50,6 @@ public class Interaction : MonoBehaviour
             // Kiểm tra va chạm với đối tượng
             if (Physics.Raycast(ray, out hit))
             {
-                Debug.Log(hit.point);
                 // Nếu hitpoint có y < 0
                 if (hit.point.y > 0.5f)
                 {
@@ -71,11 +84,48 @@ public class Interaction : MonoBehaviour
         TryCommunicate();
     }
 
+    void Yes()
+    {
+        no.gameObject.SetActive(false);
+        yes.gameObject.SetActive(false);
+        if(item >= target.require)
+        {
+            isSwitch = true;
+            item -= target.require;
+            Notice.Add("Lost " + target.require.ToString());
+            if (Notice.Count > 2)
+            {
+                Notice.RemoveAt(0);
+            }
+        }
+        else
+        {
+            Notice.Add("Not enough items");
+            if (Notice.Count > 2)
+            {
+                Notice.RemoveAt(0);
+            }
+        }
+        CancelDialogue();
+    }
+
+
+    void No()
+    {
+        no.gameObject.SetActive(false);
+        yes.gameObject.SetActive(false);
+        CancelDialogue();
+    }
+
     void TryCommunicate()
     {
         if (target != null && Vector3.Distance(target.transform.position, transform.position) <= 2)
         {
-            
+            Demo_npc tar = target.GetComponent<Demo_npc>();
+            if (tar != null)
+            {
+                tar.speed = 0;
+            }
             Dialogue();
         }
     }
@@ -86,20 +136,46 @@ public class Interaction : MonoBehaviour
         isTalking = false;
         currentDialogue = 0;
         text.text = "";
-        isMeeting = false;
+
+        Demo_npc tar = target.GetComponent<Demo_npc>();
+
+        if(tar != null)
+        {
+            tar.speed = 2f;
+        }
+
+        if (!target.inTask && tar == null)
+        {
+            target.Reward();
+        }
         target = null;
     }
     
     void Dialogue()
     {
+        string[] dialogue;
+        if (target.inTask == false)
+        {
+            // Nếu không ở trong nhiệm vụ thì nói như thường
+            dialogue = noTaskDialogue;
+        }
+            // Nếu trong nhiệm vụ thì nói khác
+        else dialogue = taskDialogue;
+        
         // Nếu kết thúc đoạn hội thoại thì dừng
         if (currentDialogue >= dialogue.Length)
         {
-            /*if(target != null && target.GetComponent<Demo_npc>() == null)
+            if(target.inTask == false)
             {
-                SceneManager.LoadScene("minigame_1");
-            }*/
-            CancelDialogue();
+
+                CancelDialogue();
+                isMeeting = false;
+                return;
+            }
+            
+            text.text = "Continue?";
+            no.gameObject.SetActive(true);
+            yes.gameObject.SetActive(true);
             return;
         }
 
@@ -112,11 +188,7 @@ public class Interaction : MonoBehaviour
         {
             currentDialogue++;
         }
-    }
-
-    void StartMinigame()
-    {
-
+        
     }
 
     void SetMovingPos(Vector3 pos)
