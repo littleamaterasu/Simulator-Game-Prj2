@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+using UnityEngine.EventSystems;
 public class Interaction : MonoBehaviour
 {
     // Tốc độ di chuyển
@@ -24,13 +24,13 @@ public class Interaction : MonoBehaviour
     public Button no;
     public Button yes;
     public string minigame;
-
+    public Rigidbody rb;
+   
     private void Start()
     {
         currentDialogue = 0;
         yes.onClick.AddListener(Yes);
         no.onClick.AddListener(No);
-
         yes.gameObject.SetActive(false);
         no.gameObject.SetActive(false);
     }
@@ -199,16 +199,23 @@ public class Interaction : MonoBehaviour
     }
 
     // Hàm di chuyển tới một điểm với di chuyển mượt mà
-    void MoveTo(Vector3 targetPoint)
+
+    void MoveTo(Vector3 targetPosition)
     {
-        isMeeting = true;
-        // Calculate the direction from current position to the target position
-        Vector3 direction = targetPoint - transform.position;
+        // Check if the mouse click is not over a UI element
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            // Calculate the new position
+            Vector3 newPosition = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
 
-        // Normalize the direction to get a unit vector
-        direction.Normalize();
+            // Move the player to the new position
+            transform.position = newPosition;
 
-        // Move the object towards the target point
-        if(Vector3.Distance(transform.position, targetPoint) >= 0.2f) transform.position += direction * Time.deltaTime * moveSpeed; // Assuming 'speed' is a variable representing the movement speed
+            // Change the player's facing direction
+            if (newPosition != targetPosition)
+            {
+                transform.LookAt(targetPosition);
+            }
+        }
     }
 }
